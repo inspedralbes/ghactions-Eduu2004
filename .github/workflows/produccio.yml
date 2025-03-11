@@ -1,23 +1,24 @@
-name: Preparant per produccioó
-run-name: ${{ github.actor }} està pujant l'aplicació a PROD  🚀
+name: Preparant per producció
+run-name: ${{ github.actor }} està pujant l'aplicació a PROD 🚀
+
 on: [push]
+
 jobs:
   Pujar-a-produccio-amb-SCP:
     runs-on: ubuntu-latest
     steps:
-      - name: Obtenint el codi del respositori
+      - name: Obtenint el codi del repositori
         uses: actions/checkout@v4
 
-      - name: scp a produccio
+      - name: Desplegar amb SCP
         run: |
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/prod_key.pem
           chmod 600 ~/prod_key.pem
-          cd ${{ github.workspace }}
-          mkdir -p ./web
-          echo "Action desplegant a produccio" > ./web/last_deploy.txt
-          date >> ./web/last_deploy.txt
-          scp -r -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i "~/prod_key.pem" ./web/* \
-          ${{ secrets.PROD_USER }}@${{ secrets.PROD_HOST }}:/home/a20edurenlop/web/a20edurenlop.daw.inspedralbes.cat/public_html/ghactions-Eduu2004
           ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i "~/prod_key.pem" \
-          ${{ secrets.PROD_USER }}@${{ secrets.PROD_HOST }} "chmod -R 755 /home/a20edurenlop/web/a20edurenlop.daw.inspedralbes.cat/public_html/ghactions-Eduu2004"
-      - run: echo "🍏 This job's status is ${{ job.status }}."
+          ${{ secrets.PROD_USER }}@${{ secrets.PROD_HOST }} "mkdir -p /home/a20edurenlop/web/a20edurenlop.daw.inspedralbes.cat/public_html/ghactions-Eduu2004/githubActionsVue"
+          scp -r -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i "~/prod_key.pem" \
+          ${{ github.workspace }}/* \
+          ${{ secrets.PROD_USER }}@${{ secrets.PROD_HOST }}:/home/a20edurenlop/web/a20edurenlop.daw.inspedralbes.cat/public_html/ghactions-Eduu2004/githubActionsVue
+          ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i "~/prod_key.pem" \
+          ${{ secrets.PROD_USER }}@${{ secrets.PROD_HOST }} "chmod -R 755 /home/a20edurenlop/web/a20edurenlop.daw.inspedralbes.cat/public_html/ghactions-Eduu2004/githubActionsVue"
+      - run: echo "🍏 Aquest job ha finalitzat amb estat ${{ job.status }}."
