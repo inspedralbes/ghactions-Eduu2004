@@ -13,19 +13,11 @@ jobs:
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/prod_key.pem
           chmod 600 ~/prod_key.pem
           cd ${{ github.workspace }}
-
-          # Asegurar que el directorio web exista y tenga archivos
           mkdir -p ./web
-          touch ./web/placeholder.txt  # Crear un archivo temporal si está vacío
-
-          # Verificar que la carpeta no está vacía
-          ls -lah ./web
-
-          # Copiar los archivos
+          echo "Action desplegant a produccio" > ./web/last_deploy.txt
+          date >> ./web/last_deploy.txt
           scp -r -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i "~/prod_key.pem" ./web/* \
           ${{ secrets.PROD_USER }}@${{ secrets.PROD_HOST }}:/home/a20edurenlop/web/a20edurenlop.daw.inspedralbes.cat/public_html/ghactions-Eduu2004
-
-          # Ajustar permisos en el servidor remoto
           ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i "~/prod_key.pem" \
           ${{ secrets.PROD_USER }}@${{ secrets.PROD_HOST }} "chmod -R 755 /home/a20edurenlop/web/a20edurenlop.daw.inspedralbes.cat/public_html/ghactions-Eduu2004"
       - run: echo "🍏 This job's status is ${{ job.status }}."
