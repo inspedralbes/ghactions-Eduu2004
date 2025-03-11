@@ -1,4 +1,4 @@
-name: Preparant per producció
+name: Preparant per produccio
 run-name: ${{ github.actor }} està pujant l'aplicació a PROD  🚀
 on: [push]
 jobs:
@@ -16,12 +16,6 @@ jobs:
           mkdir -p ./web
           echo "Action desplegant a produccio" > ./web/last_deploy.txt
           date >> ./web/last_deploy.txt
-          
-          # Crear la carpeta de destino en el servidor si no existe
-          ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i ~/prod_key.pem ${{ secrets.PROD_USER }}@${{ secrets.PROD_HOST }} "mkdir -p /home/a20edurenlop/web/actions.daw.inspedralbes.cat/public_html/githubActions /home/***/web/actions.daw.inspedralbes.cat/public_html/"
-
-          # Subir los archivos
-          scp -r -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i ~/prod_key.pem ./web/* ${{ secrets.PROD_USER }}@${{ secrets.PROD_HOST }}:/home/a20edurenlop/web/actions.daw.inspedralbes.cat/public_html/githubActions
-          scp -r -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i ~/prod_key.pem ./web/* ${{ secrets.PROD_USER }}@${{ secrets.PROD_HOST }}:/home/***/web/actions.daw.inspedralbes.cat/public_html/
+          scp -r -o stricthostkeychecking=no -o UserKnownHostsFile=/dev/null -i "~/prod_key.pem" ./web/* ${{ secrets.PROD_USER }}@${{ secrets.PROD_HOST }}:/home//web/a20edurenlop.daw.inspedralbes.cat/public_html/githubActions
           
       - run: echo "🍏 This job's status is ${{ job.status }}."
